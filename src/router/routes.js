@@ -1,3 +1,7 @@
+import LoginIllustration from "src/pages/LoginPage/TheIllustration.vue";
+import LoginForm from "src/pages/LoginPage/TheForm.vue";
+import SignUpIllustration from "src/pages/SignUpPage/TheIllustration.vue";
+import SignUpForm from "src/pages/SignUpPage/TheForm.vue";
 const routes = [
   {
     path: "/",
@@ -6,7 +10,18 @@ const routes = [
       {
         path: "/login",
         name: "login",
-        component: () => import("src/pages/LoginPage.vue"),
+        components: {
+          illustration: LoginIllustration,
+          form: LoginForm,
+        },
+      },
+      {
+        path: "/sign-up",
+        name: "sign-up",
+        components: {
+          illustration: SignUpIllustration,
+          form: SignUpForm,
+        },
       },
     ],
   },

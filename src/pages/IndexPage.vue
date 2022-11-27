@@ -1,18 +1,22 @@
-<template>
-  <q-page class="flex flex-center">
-    <img
-      alt="Quasar logo"
-      src="~assets/quasar-logo-vertical.svg"
-      style="width: 200px; height: 200px"
-    >
-    jerhoutrewuh
-  </q-page>
-</template>
+<template>{{ userData }} <button @click="logout">Logout</button></template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { AuthService } from "src/services/auth.service"
+import { UsersService } from "src/services/users.service"
+import { onMounted, ref } from "vue"
 
-export default defineComponent({
-  name: 'IndexPage'
+const userData = ref({})
+
+onMounted(async () => {
+  try {
+    const user = await UsersService.getCurrentUser()
+    userData.value = user
+  } catch (error) {
+    console.log("ada error")
+  }
 })
+
+const logout = () => {
+  AuthService.logOutUser()
+}
 </script>

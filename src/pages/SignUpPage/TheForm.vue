@@ -10,9 +10,14 @@
       outlined
       type="text"
       label="Username"
-      required
+      :error-message="
+        serializedErrors[0].username
+          ? serializedErrors[0].username.join(' .')
+          : ''
+      "
+      :error="serializedErrors[0].username ? true : false"
     >
-      <template v-slot:prepend>
+      <template #prepend>
         <q-icon name="badge" />
       </template>
     </q-input>
@@ -23,9 +28,12 @@
       outlined
       type="email"
       label="Email"
-      required
+      :error-message="
+        serializedErrors[0].email ? serializedErrors[0].email.join(' .') : ''
+      "
+      :error="serializedErrors[0].email ? true : false"
     >
-      <template v-slot:prepend>
+      <template #prepend>
         <q-icon name="mail" />
       </template>
     </q-input>
@@ -36,9 +44,14 @@
       outlined
       type="password"
       label="Password"
-      required
+      :error-message="
+        serializedErrors[0].password
+          ? serializedErrors[0].password.join(' .')
+          : ''
+      "
+      :error="serializedErrors[0].password ? true : false"
     >
-      <template v-slot:prepend>
+      <template #prepend>
         <q-icon name="key" />
       </template>
     </q-input>
@@ -49,9 +62,14 @@
       outlined
       type="password"
       label="Confirm your password"
-      required
+      :error-message="
+        serializedErrors[0].password2
+          ? serializedErrors[0].password2.join(' .')
+          : ''
+      "
+      :error="serializedErrors[0].password2 ? true : false"
     >
-      <template v-slot:prepend>
+      <template #prepend>
         <q-icon name="key" />
       </template>
     </q-input>
@@ -60,7 +78,13 @@
       >Forgot Password?</router-link
     >
     <div>
-      <q-btn class="full-width" label="SIGN UP" type="submit" color="primary" />
+      <q-btn
+        :loading="isLoading"
+        class="full-width"
+        label="SIGN UP"
+        type="submit"
+        color="primary"
+      />
     </div>
   </q-form>
 
@@ -68,21 +92,66 @@
     Already have an account?
     <router-link :to="{ name: 'login' }">Sign in instead</router-link>
   </div>
+
+  <TheAlert
+    type="danger"
+    :message="serializedErrors[1].join(', ')"
+    v-if="serializedErrors[1]"
+  />
+
+  <TheAlert
+    type="danger"
+    :message="serializedErrors[2]"
+    v-if="serializedErrors[2]"
+  />
 </template>
 <script setup>
-import TheLogo from "../../components/TheLogo.vue";
-import { ref } from "vue";
+import TheLogo from "../../components/TheLogo.vue"
+import TheAlert from "src/components/TheAlert.vue"
+import { computed, ref } from "vue"
+import { serializeBEError } from "src/services/utils"
+import { AuthService } from "src/services/auth.service"
+import { useRouter } from "vue-router"
+import { Notify } from "quasar"
+
+const router = useRouter()
 
 const formInput = ref({
   username: "",
   email: "",
   password: "",
   password2: "",
-});
+})
 
-const onSubmit = () => {
-  console.log(formInput.value);
-};
+const isLoading = ref(false)
+const errors = ref({})
+
+const onSubmit = async () => {
+  isLoading.value = true
+
+  try {
+    await AuthService.registerUser({
+      username: formInput.value.username,
+      email: formInput.value.email,
+      password: formInput.value.password,
+      password2: formInput.value.password2,
+    })
+
+    router.push({ name: "login" })
+    Notify.create({
+      type: "info",
+      message: "Register is success, please sign in",
+    })
+  } catch (error) {
+    errors.value = error.message
+  }
+
+  isLoading.value = false
+}
+
+const serializedErrors = computed(() => {
+  return serializeBEError(errors.value)
+})
 </script>
 <style lang="scss" scoped>
 h2,

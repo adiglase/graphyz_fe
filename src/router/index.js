@@ -4,7 +4,10 @@ import {
   createWebHistory,
   createWebHashHistory,
 } from "vue-router"
-import { checkAccessMiddleware } from "./middleware"
+import {
+  checkAccessMiddleware,
+  initCurrentUserStateMiddleware,
+} from "./middleware"
 import routes from "./routes"
 
 /*
@@ -32,6 +35,7 @@ const Router = createRouter({
   history: createHistory(process.env.VUE_ROUTER_BASE),
 })
 
+Router.beforeEach(initCurrentUserStateMiddleware)
 Router.beforeEach(checkAccessMiddleware)
 
 export default Router

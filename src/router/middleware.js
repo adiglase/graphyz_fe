@@ -1,5 +1,24 @@
 import { Notify } from "quasar"
 import { useUserStore } from "src/stores/user-store"
+import { AuthService } from "src/services/auth.service"
+import { UsersService } from "src/services/users.service"
+
+export async function initCurrentUserStateMiddleware(to, from, next) {
+  const userStore = useUserStore()
+  const currentUser = userStore.userData
+
+  if (!currentUser && AuthService.getToken()) {
+    try {
+      const response = await UsersService.getCurrentUser()
+      userStore.setUserData(response.data)
+      next()
+    } catch (e) {
+      console.log(e)
+    }
+  } else {
+    next()
+  }
+}
 
 export function checkAccessMiddleware(to, from, next) {
   const userStore = useUserStore()

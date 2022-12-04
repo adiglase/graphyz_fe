@@ -13,7 +13,7 @@ export function checkAccessMiddleware(to, from, next) {
     next({ name: "login" })
     return Notify.create({
       type: "negative",
-      message: "from middleware",
+      message: "Please sign in",
     })
   }
 

@@ -1,4 +1,6 @@
-<template>{{ userData }} <button @click="logout">Logout</button></template>
+<template>
+  {{ userData }}
+</template>
 
 <script setup>
 import { AuthService } from "src/services/auth.service"
@@ -12,7 +14,7 @@ onMounted(async () => {
     const user = await UsersService.getCurrentUser()
     userData.value = user
   } catch (error) {
-    console.log("ada error")
+    console.log(error)
   }
 })
 

@@ -13,7 +13,7 @@ export async function initCurrentUserStateMiddleware(to, from, next) {
       userStore.setUserData(response.data)
       next()
     } catch (e) {
-      console.log(e)
+      next()
     }
   } else {
     next()

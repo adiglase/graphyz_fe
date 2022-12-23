@@ -10,7 +10,7 @@ const routes = [
       {
         path: "",
         meta: { isRequireAuth: true },
-        component: () => import("pages/IndexPage.vue"),
+        component: () => import("src/pages/HomePage.vue"),
         name: "home",
       },
       {
@@ -18,6 +18,12 @@ const routes = [
         meta: { isRequireAuth: true },
         component: () => import("pages/MyChartsPage.vue"),
         name: "my-charts",
+      },
+      {
+        path: "/visualization/:chartType",
+        meta: { isRequireAuth: true },
+        component: () => import("pages/Visualisation/MainPage.vue"),
+        name: "visualization",
       },
     ],
   },

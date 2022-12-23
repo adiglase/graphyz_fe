@@ -10,6 +10,7 @@
       outlined
       type="text"
       label="Username"
+      required
       :error-message="
         serializedErrors[0].username
           ? serializedErrors[0].username.join(' .')

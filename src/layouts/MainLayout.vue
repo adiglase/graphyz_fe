@@ -7,7 +7,7 @@
       elevated
     >
       <div class="q-mx-sm q-mb-md">
-        <The-Logo></The-Logo>
+        <TheLogo></TheLogo>
       </div>
 
       <q-list>
@@ -22,6 +22,7 @@
     </q-drawer>
 
     <q-page-container>
+      <HeaderBar></HeaderBar>
       <router-view />
     </q-page-container>
   </q-layout>
@@ -31,11 +32,12 @@
 import { defineComponent, ref } from "vue"
 import TheLogo from "src/components/TheLogo.vue"
 import NavMenuItem from "src/components/NavMenuItem.vue"
+import HeaderBar from "src/components/HeaderBar.vue"
 
 export default defineComponent({
   name: "MainLayout",
 
-  components: { TheLogo, NavMenuItem },
+  components: { TheLogo, NavMenuItem, HeaderBar },
 
   setup() {
     const leftDrawerOpen = ref(false)
@@ -67,3 +69,9 @@ export default defineComponent({
   },
 })
 </script>
+<style lang="scss" scoped>
+.q-layout {
+  background-color: $primary-background-color;
+  padding: 20px;
+}
+</style>

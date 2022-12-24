@@ -1,9 +1,9 @@
 <template>
   <div class="chart-type-item q-pa-md" @click="onClick">
     <div class="chart-type-icon">
-      <q-img src="~assets/chart-types/bar-chart-type.svg" />
+      <q-img :src="iconUrl" />
     </div>
-    <div class="chart-type-name q-mt-md">Bar Chart</div>
+    <div class="chart-type-name q-mt-md">{{ name }}</div>
   </div>
 </template>
 <script setup>
@@ -11,8 +11,26 @@ import { useRouter } from "vue-router"
 
 const router = useRouter()
 
+const props = defineProps({
+  name: {
+    type: String,
+    required: true,
+  },
+  iconUrl: {
+    type: String,
+    required: true,
+  },
+  chartTypeId: {
+    type: String,
+    required: true,
+  },
+})
+
 const onClick = () => {
-  router.push({ name: "visualization", params: { chartType: "bar-chart" } })
+  router.push({
+    name: "visualization",
+    params: { chartType: props.chartTypeId },
+  })
 }
 </script>
 <style lang="scss" scoped>

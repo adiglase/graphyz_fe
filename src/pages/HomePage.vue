@@ -16,32 +16,36 @@
       />
     </div>
   </div>
-
-  <div class="chart-types-container">
-    <ChartTypeListItem v-for="index in 10" :key="index"></ChartTypeListItem>
+  <q-spinner color="primary" size="3em" v-if="isLoading" />
+  <div class="chart-types-container" v-else>
+    <ChartTypeListItem
+      v-for="chartType in chartTypes"
+      :key="chartType.id"
+      :chart-type-id="chartType.id"
+      :name="chartType.name"
+      :icon-url="chartType.icon"
+    ></ChartTypeListItem>
   </div>
 </template>
 
 <script setup>
-import { AuthService } from "src/services/auth.service"
-import { UsersService } from "src/services/users.service"
 import { onMounted, ref } from "vue"
 import ChartTypeListItem from "src/components/ChartTypeListItem.vue"
+import { ChartsService } from "src/services/charts.service"
 
-const userData = ref({})
+const chartTypes = ref([])
+const isLoading = ref(false)
 
 onMounted(async () => {
   try {
-    const user = await UsersService.getCurrentUser()
-    userData.value = user
-  } catch (error) {
-    console.log(error)
+    const { data } = await ChartsService.getChartTypeList()
+    chartTypes.value = data
+  } catch (e) {
+    console.log(e)
+  } finally {
+    isLoading.value = false
   }
 })
-
-const logout = () => {
-  AuthService.logOutUser()
-}
 </script>
 <style lang="scss" scoped>
 .home-title {

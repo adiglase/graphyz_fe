@@ -1,6 +1,8 @@
 import { api } from "src/boot/axios"
+import axios from "axios"
 import { AuthService } from "./auth.service"
 import { ErrorWrapper } from "./utils"
+import { API_URL } from "src/env"
 
 export class Http {
   constructor(status) {
@@ -28,8 +30,8 @@ export class Http {
           // if unauthorized
           if (error.response.status === 401) {
             AuthService.logOutUser("Please Sign In")
-            throw new ErrorWrapper(error)
           }
+          return Promise.reject(error)
         }
       )
     }

@@ -10,4 +10,16 @@ export class ChartsService extends BaseService {
       throw new ErrorWrapper(error)
     }
   }
+
+  static async createChart(params) {
+    try {
+      const response = await this.request({ auth: true }).post(
+        "charts/",
+        params
+      )
+      return new ResponseWrapper(response, response.data)
+    } catch (error) {
+      throw new ErrorWrapper(error)
+    }
+  }
 }

@@ -20,7 +20,7 @@ const routes = [
         name: "my-charts",
       },
       {
-        path: "/visualization/:chartType",
+        path: "/visualization/:chartType/:id",
         meta: { isRequireAuth: true },
         component: () => import("pages/Visualisation/MainPage.vue"),
         name: "visualization",

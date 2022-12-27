@@ -17,13 +17,13 @@ const props = defineProps({
     required: true,
   },
   data: {
-    type: Array,
+    type: Object,
     required: true,
   },
 })
 const hotSettings = ref({
-  data: props.data,
-  colHeaders: true,
+  data: props.data.data,
+  colHeaders: props.data.columns,
   height: "auto",
   renderAllRows: false,
   height: "500px",
@@ -36,7 +36,10 @@ watch(
   () => props.data,
   (newVal) => {
     if (handsOnTableRef.value) {
-      handsOnTableRef.value.hotInstance.loadData(newVal)
+      handsOnTableRef.value.hotInstance.updateSettings({
+        data: newVal.data,
+        colHeaders: newVal.columns,
+      })
     }
   }
 )

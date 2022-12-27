@@ -1,8 +1,6 @@
 import { api } from "src/boot/axios"
-import axios from "axios"
 import { AuthService } from "./auth.service"
-import { ErrorWrapper } from "./utils"
-import { API_URL } from "src/env"
+import { Notify } from "quasar"
 
 export class Http {
   constructor(status) {
@@ -31,6 +29,10 @@ export class Http {
           if (error.response.status === 401) {
             AuthService.logOutUser("Please Sign In")
           }
+          Notify.create({
+            type: "negative",
+            message: "Something went wrong",
+          })
           return Promise.reject(error)
         }
       )

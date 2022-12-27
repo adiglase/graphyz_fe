@@ -1,7 +1,17 @@
 <template>
   <div class="container row">
-    <div class="data-preview-container">data preview</div>
+    <div class="data-preview-container">
+      <q-spinner color="primary" size="3em" v-if="isLoading" />
+      <ChartDataView
+        :is-loading="isLoading"
+        :data="data"
+        v-else
+      ></ChartDataView>
+    </div>
     <div class="chart-configuration-container">
+      <q-inner-loading :showing="isLoading">
+        <q-spinner-gears size="50px" color="primary" />
+      </q-inner-loading>
       <div class="chart-title q-mb-md">
         <q-input
           input-class="title-input"
@@ -10,7 +20,7 @@
             fontWeight: '600',
             fontSize: '26px',
           }"
-          v-model="chartConfigurationData.title"
+          v-model="chartDataConfiguration.title"
           label="Title"
         />
       </div>
@@ -18,41 +28,33 @@
         <q-file
           filled
           bottom-slots
-          v-model="chartConfigurationData.dataFile"
+          v-model="chartDataConfiguration.data_file"
           label="Upload data"
           counter
           dense
           accept=".xlsx"
+          :disable="isLoading"
         >
           <template #prepend>
             <q-icon name="cloud_upload" @click.stop.prevent />
           </template>
-          <template #append>
-            <q-icon
-              name="close"
-              @click.stop.prevent="chartConfigurationData.dataFile = null"
-              class="cursor-pointer"
-            />
-          </template>
-
           <template #hint> Only accept .xlsx file </template>
-          <template #after>
-            <q-btn round dense flat icon="send" />
-          </template>
         </q-file>
       </div>
       <div class="text-h7">SELECT COLUMNS TO VISUALIZE</div>
       <q-separator class="q-mb-sm"></q-separator>
       <ColumnConfigurationField
-        :options="options"
-        v-model="chartConfigurationData.label"
+        :options="labelOptions"
+        v-model="chartDataConfiguration.label"
         label="Labels"
+        :is-disabled="isLoading"
       ></ColumnConfigurationField>
 
       <ColumnConfigurationField
-        :options="options"
-        v-model="chartConfigurationData.values"
+        :options="valueOptions"
+        v-model="chartDataConfiguration.value"
         label="Values"
+        :is-disabled="isLoading"
       ></ColumnConfigurationField>
 
       <q-separator></q-separator>
@@ -67,16 +69,39 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive } from "vue"
 import ColumnConfigurationField from "./components/ColumnConfigurationField.vue"
+import ChartDataView from "./ChartDataView.vue"
+import { computed } from "vue"
 
-const chartConfigurationData = reactive({
-  title: "Untitled",
-  dataFile: null,
-  label: "",
-  values: "",
+const props = defineProps({
+  modelValue: {
+    type: Object,
+    required: true,
+  },
+  isLoading: {
+    type: Boolean,
+    required: true,
+  },
+  labelOptions: {
+    type: Array,
+    required: true,
+  },
+  valueOptions: {
+    type: Array,
+    required: true,
+  },
+  data: {
+    type: Array,
+    required: true,
+  },
 })
-const options = ref(["A", "B", "C", "D"])
+
+const emit = defineEmits(["update:modelValue"])
+
+const chartDataConfiguration = computed({
+  get: () => props.modelValue,
+  set: (val) => emit("update:modelValue", val),
+})
 </script>
 <style lang="scss" scoped>
 .container {
@@ -86,8 +111,10 @@ const options = ref(["A", "B", "C", "D"])
 
   .data-preview-container,
   .chart-configuration-container {
+    position: relative;
     background-color: #fff;
     padding: 12px;
+    max-height: 550px;
   }
 
   @media (max-width: 800px) {

@@ -10,6 +10,7 @@
         :model-value="modelValue"
         :options="options"
         @update:model-value="(val) => emit('update:modelValue', val)"
+        :disable="isDisabled"
       />
     </div>
   </div>
@@ -26,6 +27,10 @@ const props = defineProps({
   },
   modelValue: {
     type: String,
+    required: true,
+  },
+  isDisabled: {
+    type: Boolean,
     required: true,
   },
 })

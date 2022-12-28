@@ -20,7 +20,8 @@
             fontWeight: '600',
             fontSize: '26px',
           }"
-          v-model="chartDataConfiguration.title"
+          :model-value="chartDataConfiguration.title"
+          @update:model-value="(val) => onValChange('title', val)"
           label="Title"
         />
       </div>
@@ -28,7 +29,7 @@
         <q-file
           filled
           bottom-slots
-          v-model="chartDataConfiguration.data_file"
+          v-model="dataFile"
           label="Upload data"
           counter
           dense
@@ -45,14 +46,16 @@
       <q-separator class="q-mb-sm"></q-separator>
       <ColumnConfigurationField
         :options="labelOptions"
-        v-model="chartDataConfiguration.label"
+        :value="chartDataConfiguration.label"
+        @update-val="(val) => onValChange('label', val)"
         label="Labels"
         :is-disabled="isLoading"
       ></ColumnConfigurationField>
 
       <ColumnConfigurationField
         :options="valueOptions"
-        v-model="chartDataConfiguration.value"
+        :value="chartDataConfiguration.value"
+        @update-val="(val) => onValChange('value', val)"
         label="Values"
         :is-disabled="isLoading"
       ></ColumnConfigurationField>
@@ -72,12 +75,9 @@
 import ColumnConfigurationField from "./components/ColumnConfigurationField.vue"
 import ChartDataView from "./ChartDataView.vue"
 import { computed } from "vue"
+import { useDebounceFn } from "@vueuse/core"
 
 const props = defineProps({
-  modelValue: {
-    type: Object,
-    required: true,
-  },
   isLoading: {
     type: Boolean,
     required: true,
@@ -94,13 +94,28 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  chartDataConfiguration: {
+    type: Object,
+    required: true,
+  },
+  dataFile: {
+    type: [Array, null],
+    required: true,
+  },
 })
 
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits(["updateChartConfiguration", "updateDataFile"])
 
-const chartDataConfiguration = computed({
-  get: () => props.modelValue,
-  set: (val) => emit("update:modelValue", val),
+const onValChange = useDebounceFn((field, value) => {
+  emit("updateChartConfiguration", {
+    ...props.chartDataConfiguration,
+    [field]: value,
+  })
+}, 800)
+
+const dataFile = computed({
+  get: () => props.dataFile,
+  set: (val) => emit("updateDataFile", val),
 })
 </script>
 <style lang="scss" scoped>

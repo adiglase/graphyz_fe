@@ -7,9 +7,9 @@
         dense
         square
         hide-bottom-space
-        :model-value="modelValue"
+        :model-value="value"
         :options="options"
-        @update:model-value="(val) => emit('update:modelValue', val)"
+        @update:model-value="(val) => emit('updateVal', val)"
         :disable="isDisabled"
       />
     </div>
@@ -25,7 +25,7 @@ const props = defineProps({
     type: Array,
     required: true,
   },
-  modelValue: {
+  value: {
     type: String,
     required: true,
   },
@@ -34,5 +34,5 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits(["updateVal"])
 </script>

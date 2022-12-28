@@ -11,11 +11,14 @@
       <q-tab-panels v-model="tab" animated keep-alive>
         <q-tab-panel name="configuration">
           <ChartConfiguration
-            v-model="chartDataConfiguration"
             :is-loading="isLoading"
             :label-options="labelOptions"
             :value-options="valueOptions"
             :data="dataFileInDict"
+            :data-file="dataFile"
+            :chart-data-configuration="chartDataConfiguration"
+            @update-chart-configuration="onupdateChartDataConfiguration"
+            @update-data-file="onUpdateDataFile"
           ></ChartConfiguration>
         </q-tab-panel>
 
@@ -27,71 +30,65 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue"
+import { ref, onMounted, watch } from "vue"
 import ChartConfiguration from "./ChartConfiguration.vue"
 import ChartPreview from "./ChartPreview.vue"
-import { watchDebounced } from "@vueuse/core"
 import { ChartsService } from "src/services/charts.service"
 import { useRoute } from "vue-router"
 
 const route = useRoute()
 
 const tab = ref("configuration")
+const isLoading = ref(false)
+// chart data conf //
 const chartDataConfiguration = ref({
   title: "",
-  data_file: null,
   label: "",
   value: "",
 })
+const dataFile = ref(null)
 const labelOptions = ref(["A", "B", "C", "D"])
 const valueOptions = ref(["A", "B", "C", "D"])
-
 const dataFileInDict = ref([])
+// ================ //
 
-const isLoading = ref(true)
+const onupdateChartDataConfiguration = async (newVal) => {
+  isLoading.value = true
 
-const runChartDataConfigurationWatcher = () => {
-  return watchDebounced(
-    chartDataConfiguration.value,
-    (newVal) => {
-      if (!isLoading.value) {
-        // to prevent watcher run after fetching data on initial load
-        const formData = new FormData()
-        for (const key in newVal) {
-          // only send update to data_file there is a value
-          // so it will not overwrite the data_file value if we only update other field
-          // data_file value is mean to be only can be updated, can't be deleted
-          if (key === "data_file" && !newVal[key]) continue
-          formData.append(key, newVal[key] || "")
-        }
+  const formData = new FormData()
+  Object.keys(newVal).forEach((key) => {
+    formData.append(key, newVal[key] || "")
+  })
 
-        sendUpdatedChartConf(formData)
-      }
-    },
-    { debounce: 1000, immediate: false }
-  )
+  await updateChartConf(formData)
+
+  isLoading.value = false
+}
+
+const onUpdateDataFile = async (newVal) => {
+  const formData = new FormData()
+  formData.append("data_file", newVal)
+
+  isLoading.value = true
+
+  await updateChartConf(formData)
+  await getDataFileDict()
+
+  isLoading.value = false
 }
 
 const getChartData = async () => {
-  isLoading.value = true
   const id = route.params.id
 
   try {
     const { data } = await ChartsService.getChart(id)
     chartDataConfiguration.value.title = data.title
-    chartDataConfiguration.value.data_file = data.data_file
     chartDataConfiguration.value.label = data.label
     chartDataConfiguration.value.value = data.value
-
-    // only run watcher after the initial data already fetched
-    runChartDataConfigurationWatcher()
   } catch (error) {
     console.log(error)
-  } finally {
-    isLoading.value = false
   }
 }
-getChartData()
 
 const getDataFileDict = async () => {
   try {
@@ -101,19 +98,25 @@ const getDataFileDict = async () => {
     console.log(error)
   }
 }
-getDataFileDict()
 
-const sendUpdatedChartConf = async (formData) => {
-  isLoading.value = true
+const updateChartConf = async (formData) => {
   try {
     const { data } = await ChartsService.updateChart(route.params.id, formData)
-    await getDataFileDict()
+    chartDataConfiguration.value.title = data.title
+    chartDataConfiguration.value.label = data.label
+    chartDataConfiguration.value.value = data.value
   } catch (error) {
     console.log(error)
-  } finally {
-    isLoading.value = false
   }
 }
+
+onMounted(async () => {
+  isLoading.value = true
+  await getChartData()
+  await getDataFileDict()
+
+  isLoading.value = false
+})
 </script>
 <style lang="scss" scoped>
 .page-navigation {

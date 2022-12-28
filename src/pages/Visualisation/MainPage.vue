@@ -47,8 +47,8 @@ const chartDataConfiguration = ref({
   value: "",
 })
 const dataFile = ref(null)
-const labelOptions = ref(["A", "B", "C", "D"])
-const valueOptions = ref(["A", "B", "C", "D"])
+const labelOptions = ref([])
+const valueOptions = ref([])
 const dataFileInDict = ref([])
 // ================ //
 
@@ -85,6 +85,9 @@ const getChartData = async () => {
     chartDataConfiguration.value.title = data.title
     chartDataConfiguration.value.label = data.label
     chartDataConfiguration.value.value = data.value
+
+    labelOptions.value = data.column_configuration_options
+    valueOptions.value = data.column_configuration_options
   } catch (error) {
     console.log(error)
   }
@@ -105,6 +108,9 @@ const updateChartConf = async (formData) => {
     chartDataConfiguration.value.title = data.title
     chartDataConfiguration.value.label = data.label
     chartDataConfiguration.value.value = data.value
+
+    labelOptions.value = data.column_configuration_options
+    valueOptions.value = data.column_configuration_options
   } catch (error) {
     console.log(error)
   }

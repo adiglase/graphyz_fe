@@ -23,7 +23,9 @@
         </q-tab-panel>
 
         <q-tab-panel name="preview">
-          <ChartPreview></ChartPreview>
+          <ChartPreview
+            :chart-visualization="chartVisualization"
+          ></ChartPreview>
         </q-tab-panel>
       </q-tab-panels>
     </div>
@@ -38,7 +40,7 @@ import { useRoute } from "vue-router"
 
 const route = useRoute()
 
-const tab = ref("configuration")
+const tab = ref("preview")
 const isLoading = ref(false)
 // chart data conf //
 const chartDataConfiguration = ref({
@@ -50,6 +52,7 @@ const dataFile = ref(null)
 const labelOptions = ref([])
 const valueOptions = ref([])
 const dataFileInDict = ref([])
+const chartVisualization = ref(null)
 // ================ //
 
 const onupdateChartDataConfiguration = async (newVal) => {
@@ -88,6 +91,8 @@ const getChartData = async () => {
 
     labelOptions.value = data.column_configuration_options
     valueOptions.value = data.column_configuration_options
+
+    chartVisualization.value = data.chart_visualization
   } catch (error) {
     console.log(error)
   }
@@ -111,6 +116,8 @@ const updateChartConf = async (formData) => {
 
     labelOptions.value = data.column_configuration_options
     valueOptions.value = data.column_configuration_options
+
+    chartVisualization.value = data.chart_visualization
   } catch (error) {
     console.log(error)
   }

@@ -2223,6 +2223,11 @@
     "@vue/devtools-api" "^6.4.4"
     "vue-demi" "*"
 
+"plotly.js-dist@^2.17.0":
+  "integrity" "sha512-YIC9odkIBYYlY1D9RA4cIeaDidnvSpd+WO33aUY85jvwRQk0wUIUYdGGr4rf7Dr62BYyn1AVQ8y8uS1BnMIXZQ=="
+  "resolved" "https://registry.npmjs.org/plotly.js-dist/-/plotly.js-dist-2.17.0.tgz"
+  "version" "2.17.0"
+
 "postcss-selector-parser@^6.0.9":
   "integrity" "sha512-IQ7TZdoaqbT+LCpShg46jnZVlhWD2w6iQYAcYXfHARZ7X1t/UGhhceQDs5X0cGqKvYlHNOuv7Oa1xmb0oQuA3w=="
   "resolved" "https://registry.npmjs.org/postcss-selector-parser/-/postcss-selector-parser-6.0.10.tgz"
@@ -2812,11 +2817,6 @@
   optionalDependencies:
     "fsevents" "~2.3.2"
 
-"vue-debounce@^4.0.0":
-  "integrity" "sha512-+BrcKfLpyDpUJ58ZrAvI35irRCgYHFpnF3NJZwwaz8/kkKmEq6TWPXBIhLh2HQAsUZNwo52K/vQyiEFsJ/1RYA=="
-  "resolved" "https://registry.npmjs.org/vue-debounce/-/vue-debounce-4.0.0.tgz"
-  "version" "4.0.0"
-
 "vue-demi@*":
   "integrity" "sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A=="
   "resolved" "https://registry.npmjs.org/vue-demi/-/vue-demi-0.13.11.tgz"
@@ -2852,7 +2852,7 @@
   dependencies:
     "@vue/devtools-api" "^6.4.5"
 
-"vue@^2.6.14 || ^3.2.0", "vue@^3.0.0", "vue@^3.0.0-0 || ^2.6.0", "vue@^3.2.0", "vue@^3.2.25", "vue@^3.2.29", "vue@>= 2.0.0", "vue@3.2.41", "vue@next":
+"vue@^2.6.14 || ^3.2.0", "vue@^3.0.0", "vue@^3.0.0-0 || ^2.6.0", "vue@^3.2.0", "vue@^3.2.25", "vue@^3.2.29", "vue@3.2.41", "vue@next":
   "integrity" "sha512-uuuvnrDXEeZ9VUPljgHkqB5IaVO8SxhPpqF2eWOukVrBnRBx2THPSGQBnVRt0GrIG1gvCmFXMGbd7FqcT1ixNQ=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-3.2.41.tgz"
   "version" "3.2.41"

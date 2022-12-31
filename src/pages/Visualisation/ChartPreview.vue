@@ -6,7 +6,7 @@
 </template>
 <script setup>
 import Plotly from "plotly.js-dist"
-import { onActivated, watch, ref } from "vue"
+import { onActivated, watch, ref, onMounted } from "vue"
 
 const plot = ref()
 
@@ -25,19 +25,26 @@ onActivated(() => {
   }
 })
 
-watch(
+onMounted(() => {
+  watch(
   () => props.chartVisualization,
   (newVal) => {
     if (newVal) {
+      // watch has to wait for mounted because the dom only appear after it's already mounted
       Plotly.react(plot.value, newVal.data, newVal.layout, {
         responsive: true,
       })
-    } else {
+    } else if (plot.value.classList.contains('js-plotly-plot')) {
+      // if chart already initialized to the dom before
       // remove the chart
       Plotly.purge(plot.value)
     }
+  }, {
+    immediate: true
   }
 )
+})
+
 </script>
 <style lang="scss" scoped>
 .preview-container {

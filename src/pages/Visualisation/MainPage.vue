@@ -40,7 +40,7 @@ import { useRoute } from "vue-router"
 
 const route = useRoute()
 
-const tab = ref("preview")
+const tab = ref("configuration")
 const isLoading = ref(false)
 // chart data conf //
 const chartDataConfiguration = ref({

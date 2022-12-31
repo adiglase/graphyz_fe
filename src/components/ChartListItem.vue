@@ -49,12 +49,15 @@ const props = defineProps({
   .chart-type-icon {
     .q-img {
       width: 70px;
+      height: 70px;
     }
   }
   .chart-name {
     font-weight: 500;
     font-size: 16px;
-    line-height: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 }
 </style>

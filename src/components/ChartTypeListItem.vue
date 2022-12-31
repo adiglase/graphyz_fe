@@ -72,7 +72,6 @@ const onClick = async () => {
   .chart-type-name {
     font-weight: 500;
     font-size: 16px;
-    line-height: 0;
   }
 }
 </style>

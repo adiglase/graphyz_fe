@@ -11,6 +11,15 @@ export class ChartsService extends BaseService {
     }
   }
 
+  static async getUserChartList() {
+    try {
+      const response = await this.request({ auth: true }).get("charts/")
+      return new ResponseWrapper(response, response.data)
+    } catch (error) {
+      throw new ErrorWrapper(error)
+    }
+  }
+
   static async createChart(params) {
     try {
       const response = await this.request({ auth: true }).post(

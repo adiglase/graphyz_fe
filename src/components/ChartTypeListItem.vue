@@ -37,7 +37,7 @@ const onClick = async () => {
     const { data } = await ChartsService.createChart({
       chart_type: props.chartTypeId,
     })
-    router.push({
+    await router.push({
       name: "visualization",
       params: {
         chartType: data.chart_type,

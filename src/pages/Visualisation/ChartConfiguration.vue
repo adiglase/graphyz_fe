@@ -1,4 +1,31 @@
 <template>
+  <q-dialog ref="dialogRef" @hide="onDialogHide">
+    <q-card class="q-dialog-plugin">
+      <q-card flat bordered class="my-card bg-grey-1">
+        <q-card-section>
+          <div class="row items-center no-wrap">
+            <div class="col">
+              <div class="text-h6">Delete chart</div>
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-section> Are you sure? </q-card-section>
+
+        <q-separator />
+
+        <q-card-actions align="right">
+          <q-btn
+            color="primary"
+            :loading="isDeletingChart"
+            label="OK"
+            @click="onProceedDelete"
+          />
+          <q-btn color="primary" label="Cancel" @click="onDialogCancel" />
+        </q-card-actions>
+      </q-card>
+    </q-card>
+  </q-dialog>
+
   <div class="container row">
     <div class="data-preview-container">
       <q-spinner color="primary" size="3em" v-if="isLoading" />
@@ -62,6 +89,7 @@
 
       <q-separator></q-separator>
       <q-btn
+        @click="onDeleteChart"
         class="q-mt-md"
         unelevated
         color="red"
@@ -74,8 +102,12 @@
 <script setup>
 import ColumnConfigurationField from "./components/ColumnConfigurationField.vue"
 import ChartDataView from "./ChartDataView.vue"
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import { useDebounceFn } from "@vueuse/core"
+import { useDialogPluginComponent } from "quasar"
+import { ChartsService } from "src/services/charts.service"
+import { useRoute, useRouter } from "vue-router"
+import { Notify } from "quasar"
 
 const props = defineProps({
   isLoading: {
@@ -104,7 +136,18 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(["updateChartConfiguration", "updateDataFile"])
+const emit = defineEmits([
+  "updateChartConfiguration",
+  "updateDataFile",
+  ...useDialogPluginComponent.emits,
+])
+
+const router = useRouter()
+const route = useRoute()
+const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
+  useDialogPluginComponent()
+
+const isDeletingChart = ref(false)
 
 const onValChange = useDebounceFn((field, value) => {
   emit("updateChartConfiguration", {
@@ -117,6 +160,26 @@ const dataFile = computed({
   get: () => props.dataFile,
   set: (val) => emit("updateDataFile", val),
 })
+
+const onDeleteChart = () => {
+  dialogRef.value.show()
+}
+
+const onProceedDelete = async () => {
+  isDeletingChart.value = true
+  try {
+    await ChartsService.deleteChart(route.params.id)
+    onDialogOK()
+    await router.push({ name: "home" })
+    Notify.create({
+      type: "info",
+      message: "Chart deleted successfully",
+    })
+  } catch (error) {
+    console.log(error)
+  }
+  isDeletingChart.value = false
+}
 </script>
 <style lang="scss" scoped>
 .container {

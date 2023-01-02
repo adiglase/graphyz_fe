@@ -32,6 +32,15 @@ export class ChartsService extends BaseService {
     }
   }
 
+  static async deleteChart(id) {
+    try {
+      const response = await this.request({ auth: true }).delete("charts/" + id)
+      return new ResponseWrapper(response, response.data)
+    } catch (error) {
+      throw new ErrorWrapper(error)
+    }
+  }
+
   static async updateChart(id, formData) {
     try {
       const response = await this.request({ auth: true }).put(

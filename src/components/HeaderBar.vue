@@ -1,5 +1,8 @@
 <template>
   <div class="container q-pa-sm q-mb-md">
+    <div class="sidebar-toggle-btn">
+      <q-btn @click="$emit('toggleLeftDrawer')" unelevated icon="menu" />
+    </div>
     <span class="avatar">
       <q-btn-dropdown unelevated fab-mini>
         <template #label>
@@ -33,10 +36,13 @@
   </div>
 </template>
 <script setup>
+import { defineEmits } from "vue"
 import { useUserStore } from "src/stores/user-store"
 import { AuthService } from "src/services/auth.service"
 
 const userStore = useUserStore()
+
+defineEmits(["toggleLeftDrawer"])
 
 const logoutUser = () => {
   AuthService.logOutUser()
@@ -46,7 +52,7 @@ const logoutUser = () => {
 .container {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   background-color: #fff;
   border-radius: $card-border-radius;
 }

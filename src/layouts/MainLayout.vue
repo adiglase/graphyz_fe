@@ -22,7 +22,7 @@
     </q-drawer>
 
     <q-page-container>
-      <HeaderBar></HeaderBar>
+      <HeaderBar @toggle-left-drawer="toggleLeftDrawer"></HeaderBar>
       <router-view />
     </q-page-container>
   </q-layout>

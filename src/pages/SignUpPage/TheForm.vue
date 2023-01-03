@@ -74,9 +74,6 @@
       </template>
     </q-input>
 
-    <router-link class="block q-mt-sm text-right" :to="{ name: 'login' }"
-      >Forgot Password?</router-link
-    >
     <div>
       <q-btn
         :loading="isLoading"
